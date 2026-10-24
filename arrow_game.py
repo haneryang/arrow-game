@@ -69,11 +69,12 @@ MAX_MISTAKES = 3
 class ArrowGame:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("一箭又一箭 - 102402154")
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont("microsoftyahei", 22)
-        self.big_font = pygame.font.SysFont("microsoftyahei", 48)
+        # 中文字体兼容：优先微软雅黑，找不到就用默认字体
+        self.font = pygame.font.SysFont(["microsoftyahei", "Microsoft YaHei", "simhei", "arial"], 22)
+        self.big_font = pygame.font.SysFont(["microsoftyahei", "Microsoft YaHei", "simhei", "arial"], 48)
         self.state = "start"  # start / play / win / fail
         self.reset_level(0)
 
