@@ -4,7 +4,7 @@
 学号：102402154
 操作：鼠标点箭头 / R重开 / U撤销 / H提示 / Esc暂停
 """
-import pygame, sys, time
+import pygame, sys, time, math
 
 CELL = 60
 MARGIN_X = 110
@@ -300,7 +300,7 @@ class Game:
         for i in range(10):
             ang = -3.14/2 + i * 3.14/5
             rad = size if i % 2 == 0 else size//2
-            pts.append((x + rad*pygame.math.cos(ang), y + rad*pygame.math.sin(ang)))
+            pts.append((x + rad*math.cos(ang), y + rad*math.sin(ang)))
         pygame.draw.polygon(self.screen, col, pts)
 
     def draw_top_bar(self):
