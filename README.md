@@ -28,6 +28,7 @@ python arrow_game.py
 - R 键：重开本关
 - 鼠标点击任意处：开始/继续
 
-## 游戏截图
+<img width="790" height="767" alt="image" src="https://github.com/user-attachments/assets/4dcbcb06-a914-4f58-b514-0b4c1f5f9e57" />
+<img width="801" height="740" alt="image" src="https://github.com/user-attachments/assets/4820cebf-7c02-423a-a2ca-f471f19a4a90" />
 
-（运行后截图贴在这里）
+
