@@ -194,6 +194,7 @@ class Game:
         self.mid_font = pygame.font.SysFont(["microsoftyahei","Microsoft YaHei","simhei","arial"], 26, bold=True)
         self.state = "start"
         self.pause_btns = {}
+        self.action_btns = {}
         self.reset_level(0)
 
     def reset_level(self, lv):
@@ -286,8 +287,17 @@ class Game:
         pygame.draw.circle(self.screen, (20,20,30), (x+2, y+3), r)
         pygame.draw.circle(self.screen, color, (x, y), r)
         pygame.draw.circle(self.screen, (255,255,255), (x-5, y-5), r//3)
-        txt = self.mid_font.render(ARROW_CH[direction], True, WHITE)
-        self.screen.blit(txt, (x-txt.get_width()//2, y-txt.get_height()//2))
+        # 用三角形画箭头方向
+        s = 9
+        if direction == 0:    # 上
+            pts = [(x, y-s), (x-s, y+s), (x+s, y+s)]
+        elif direction == 1:  # 右
+            pts = [(x+s, y), (x-s, y-s), (x-s, y+s)]
+        elif direction == 2:  # 下
+            pts = [(x, y+s), (x-s, y-s), (x+s, y-s)]
+        else:                 # 左
+            pts = [(x-s, y), (x+s, y-s), (x+s, y+s)]
+        pygame.draw.polygon(self.screen, WHITE, pts)
 
     def draw_heart(self, x, y, color):
         pygame.draw.circle(self.screen, color, (x-5, y-4), 6)
@@ -349,8 +359,13 @@ class Game:
 
     def draw_bottom_bar(self):
         y = TOP_BAR + BOARD_H + 25
-        for text, x in [("R重开",20),("U撤销",100),("H提示",180),("Esc暂停",260)]:
-            self.screen.blit(self.small_font.render(text, True, WHITE), (x, y))
+        self.action_btns = {}
+        for text, x in [("R重开",20),("U撤销",110),("H提示",200),("Esc暂停",290)]:
+            rect = pygame.Rect(x, y-5, 80, 30)
+            round_rect(self.screen, rect, 6, (60,72,100))
+            pygame.draw.rect(self.screen, MAT_EDGE, rect, 1, border_radius=6)
+            self.screen.blit(self.small_font.render(text, True, WHITE), (x+8, y+3))
+            self.action_btns[text] = rect
         if self.combo >= 2:
             self.screen.blit(self.mid_font.render(f"x{self.combo}", True, ORANGE), (WIDTH-120, y-5))
 
@@ -433,6 +448,13 @@ class Game:
         elif self.state == "play":
             if pygame.Rect(WIDTH-45, 18, 28, 28).collidepoint(mx, my):
                 self.state = "pause"; return
+            for text, btn in self.action_btns.items():
+                if btn.collidepoint(mx, my):
+                    if text == "R重开": self.reset_level(self.level)
+                    elif text == "U撤销": self.undo()
+                    elif text == "H提示": self.give_hint()
+                    elif text == "Esc暂停": self.state = "pause"
+                    return
             c = (mx - MARGIN_X) // CELL
             r = (my - TOP_BAR - 10) // CELL
             if 0 <= r < ROWS and 0 <= c < COLS:
