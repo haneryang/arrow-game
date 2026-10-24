@@ -286,7 +286,6 @@ class Game:
             pygame.draw.circle(self.screen, GOLD, (x, y), r+5, 2)
         pygame.draw.circle(self.screen, (20,20,30), (x+2, y+3), r)
         pygame.draw.circle(self.screen, color, (x, y), r)
-        pygame.draw.circle(self.screen, (255,255,255), (x-5, y-5), r//3)
         # 用三角形画箭头方向
         s = 9
         if direction == 0:    # 上
@@ -298,6 +297,7 @@ class Game:
         else:                 # 左
             pts = [(x-s, y), (x+s, y-s), (x+s, y+s)]
         pygame.draw.polygon(self.screen, WHITE, pts)
+        pygame.draw.polygon(self.screen, (255,255,255), pts, 2)
 
     def draw_heart(self, x, y, color):
         pygame.draw.circle(self.screen, color, (x-5, y-4), 6)
@@ -360,11 +360,16 @@ class Game:
     def draw_bottom_bar(self):
         y = TOP_BAR + BOARD_H + 25
         self.action_btns = {}
-        for text, x in [("R重开",20),("U撤销",110),("H提示",200),("Esc暂停",290)]:
-            rect = pygame.Rect(x, y-5, 80, 30)
+        labels = ["R重开", "U撤销", "H提示", "Esc暂停"]
+        bw, gap = 78, 10
+        total = len(labels) * bw + (len(labels)-1) * gap
+        start_x = (WIDTH - total) // 2
+        for i, text in enumerate(labels):
+            x = start_x + i * (bw + gap)
+            rect = pygame.Rect(x, y-5, bw, 30)
             round_rect(self.screen, rect, 6, (60,72,100))
             pygame.draw.rect(self.screen, MAT_EDGE, rect, 1, border_radius=6)
-            self.screen.blit(self.small_font.render(text, True, WHITE), (x+8, y+3))
+            self.screen.blit(self.small_font.render(text, True, WHITE), (x+12, y+3))
             self.action_btns[text] = rect
         if self.combo >= 2:
             self.screen.blit(self.mid_font.render(f"x{self.combo}", True, ORANGE), (WIDTH-120, y-5))
